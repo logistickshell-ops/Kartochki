@@ -1,0 +1,1 @@
+{"routes":[{"path":"/","title":"Карточки — главная"},{"path":"/#/session/:topicId","title":"Занятие по карточкам"},{"path":"/#/checklist","title":"Чек-лист сервиса"},{"path":"/#/guide","title":"Как добавлять задания на GitHub"}]}
