@@ -5,7 +5,11 @@ export type TopicId =
   | 'food'
   | 'home'
   | 'transport'
-  | 'feelings';
+  | 'feelings'
+  | 'seasons'
+  | 'week'
+  | 'animals'
+  | 'weather';
 
 export interface Topic {
   id: TopicId;

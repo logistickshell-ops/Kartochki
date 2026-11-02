@@ -42,6 +42,9 @@ if (telegram) {
 const escapeHtml = (value: unknown): string => String(value ?? '').replace(/[&<>"']/g, (char) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[char] ?? char));
+const renderIcon = (icon: string): string => icon === '🪥'
+  ? '<svg class="vector-icon toothbrush-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="rotate(35 32 32)"><rect x="26" y="21" width="12" height="38" rx="6" fill="#3B91A4"/><path d="M29 34h6M29 42h6M29 50h6" stroke="#C5EEF0" stroke-width="2" stroke-linecap="round"/><rect x="21" y="7" width="22" height="21" rx="7" fill="#F7FCFC" stroke="#347E91" stroke-width="2"/><path d="M26 11v7M32 10v8M38 11v7" stroke="#E69B5A" stroke-width="2.5" stroke-linecap="round"/><path d="M23 23h18" stroke="#347E91" stroke-width="2"/></g></svg>'
+  : escapeHtml(icon);
 const topicById = (id: string) => topics.find((topic) => topic.id === id);
 const tasksFor = (topicId: TopicId) => starterTasks.filter((task) => task.topicId === topicId);
 const getRoute = () => {
@@ -161,7 +164,7 @@ function renderSession(topicId: string | undefined): void {
       </section>
       <article class="task-panel">
         <div class="task-topline"><span class="task-topic-badge">${escapeHtml(topic.icon)} ${escapeHtml(topic.shortTitle)}</span><button class="quiet-button" type="button" data-action="repeat">🔊 Повторить инструкцию</button></div>
-        <div class="task-illustration" aria-hidden="true">${escapeHtml(task.icon)}</div>
+        <div class="task-illustration" aria-hidden="true">${renderIcon(task.icon)}</div>
         <p class="task-instruction">${escapeHtml(task.instruction)}</p>
         <h1 class="task-question">${escapeHtml(task.prompt)}</h1>
         <p class="helper-line">${adultMode ? 'Если ребёнок показал взглядом или жестом, нажмите на выбранную им карточку.' : 'Коснись карточки или покажи ответ взрослому.'}</p>
@@ -170,7 +173,7 @@ function renderSession(topicId: string | undefined): void {
             const isSelected = current.selectedOptionId === answer.id;
             const className = isSelected ? (current.correct ? 'answer-card is-correct' : 'answer-card is-try') : 'answer-card';
             return `<button class="${className}" type="button" data-action="answer" data-option="${escapeHtml(answer.id)}" aria-pressed="${isSelected}" ${current.correct || current.skipped ? 'disabled' : ''}>
-              <span class="answer-icon" aria-hidden="true">${escapeHtml(answer.icon)}</span><span>${escapeHtml(answer.label)}</span>
+              <span class="answer-icon" aria-hidden="true">${renderIcon(answer.icon)}</span><span>${escapeHtml(answer.label)}</span>
               ${isSelected && current.correct ? '<span class="answer-check" aria-hidden="true">✓</span>' : ''}
             </button>`;
           }).join('')}
@@ -214,11 +217,11 @@ function renderGuide(): void {
     <section class="guide-callout"><span class="guide-callout-mark" aria-hidden="true">✎</span><div><strong>Один файл для заданий: <code>src/content.ts</code></strong><p>Каждая тема вынесена в отдельный блок с заголовком. Новую карточку добавляйте в массив своей темы.</p></div></section>
     <section class="guide-steps">
       <article class="guide-step"><span class="step-number">01</span><div><h2>Откройте файл на GitHub</h2><p>В вашем репозитории перейдите в <code>src/content.ts</code> и нажмите на карандаш <strong>Edit this file</strong>.</p></div></article>
-      <article class="guide-step"><span class="step-number">02</span><div><h2>Найдите нужную тему</h2><p>В файле есть семь подписанных разделов. Ниже указаны точные названия и ID, которые нужно сохранить.</p><div class="github-topic-list">${topics.map((topic) => `<div class="github-topic"><span aria-hidden="true">${escapeHtml(topic.icon)}</span><div><strong>${escapeHtml(topic.title)}</strong><code>${escapeHtml(topic.id)}</code></div><small>${tasksFor(topic.id).length} примера</small></div>`).join('')}</div></div></article>
+      <article class="guide-step"><span class="step-number">02</span><div><h2>Найдите нужную тему</h2><p>В файле есть одиннадцать подписанных разделов. Ниже указаны точные названия и ID, которые нужно сохранить.</p><div class="github-topic-list">${topics.map((topic) => `<div class="github-topic"><span aria-hidden="true">${escapeHtml(topic.icon)}</span><div><strong>${escapeHtml(topic.title)}</strong><code>${escapeHtml(topic.id)}</code></div><small>${tasksFor(topic.id).length} примера</small></div>`).join('')}</div></div></article>
       <article class="guide-step"><span class="step-number">03</span><div><h2>Скопируйте карточку и измените текст</h2><p>Вставьте объект внутрь массива выбранной темы. У каждого задания свой уникальный ID, а правильный ответ ссылается на ID варианта.</p><pre class="code-block"><code>${escapeHtml(example)}</code></pre><ul class="guide-rules"><li><code>topicId</code> должен совпасть с ID блока темы.</li><li><code>id</code> задания не должен повторять уже существующий.</li><li><code>correctOptionId</code> должен совпасть с одним из <code>options[].id</code>.</li><li>Сохраните запятые и фигурные скобки, как в примере.</li></ul></div></article>
       <article class="guide-step"><span class="step-number">04</span><div><h2>Сохраните и опубликуйте</h2><p>Нажмите <strong>Commit changes</strong> в GitHub. Если репозиторий подключён к Render, статический сайт соберётся автоматически; иначе запустите Deploy вручную. Проверяйте задания на телефоне до занятий с ребёнком.</p></div></article>
     </section>
-    <section class="guide-bottom"><div><p class="eyebrow">Остался вопрос?</p><h2>Добавление новой темы</h2><p>Для новой темы, помимо карточек, добавьте её ID в <code>TopicId</code> в <code>src/types.ts</code> и описание темы в <code>src/data.ts</code>. Существующие семь разделов можно редактировать только в <code>src/content.ts</code>.</p></div><a class="button primary" href="#/checklist">Открыть чек-лист запуска <span aria-hidden="true">→</span></a></section>
+    <section class="guide-bottom"><div><p class="eyebrow">Остался вопрос?</p><h2>Добавление новой темы</h2><p>Для новой темы, помимо карточек, добавьте её ID в <code>TopicId</code> в <code>src/types.ts</code> и описание темы в <code>src/data.ts</code>. Существующие одиннадцать разделов можно редактировать только в <code>src/content.ts</code>.</p></div><a class="button primary" href="#/checklist">Открыть чек-лист запуска <span aria-hidden="true">→</span></a></section>
   </main>${footer()}`;
 }
 

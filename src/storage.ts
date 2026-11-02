@@ -2,7 +2,7 @@ import type { ProgressRecord, TopicId } from './types';
 
 const PROGRESS_KEY = 'kartochki.progress.v1';
 const CHECKLIST_KEY = 'kartochki.checklist.v1';
-const allowedTopics = new Set(['day-night', 'hygiene', 'clothes-weather', 'food', 'home', 'transport', 'feelings']);
+const allowedTopics = new Set(['day-night', 'hygiene', 'clothes-weather', 'food', 'home', 'transport', 'feelings', 'seasons', 'week', 'animals', 'weather']);
 
 function safeParse<T>(raw: string | null, fallback: T): T {
   if (!raw) return fallback;

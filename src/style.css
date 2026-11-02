@@ -95,6 +95,7 @@ h1, h2, h3 { color: var(--ink); }
 .answer-card.is-correct { border-color: #69b4a8; background: #edf8f5; color: #236d63; }
 .answer-card.is-try { border-color: #e7c586; background: #fff8e9; }
 .answer-icon { font-size: 37px; line-height: 1; }
+.vector-icon { display: block; width: 1em; height: 1em; }
 .answer-check { position: absolute; right: 12px; top: 9px; color: #308c7c; font-size: 20px; }
 .feedback { display: flex; align-items: center; gap: 12px; max-width: 660px; margin: 16px auto 0; padding: 12px 15px; border-radius: 15px; text-align: left; }
 .feedback.success { background: #eaf7f3; color: #286c60; }
